@@ -30,16 +30,16 @@ export const handler = (web3, provider) => () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provider]);
 
-  if (data) {
-    console.log(web3.utils.keccak256(data));
-  }
+  // if (data) {
+  //   console.log(web3.utils.keccak256(data));
+  // }
 
   return {
-    account: {
-      data,
-      isAdmin: (data && adminAddresses[web3.utils.keccak256(data)]) ?? false,
-      mutate,
-      ...rest,
-    },
+    // account: {
+    data,
+    isAdmin: (data && adminAddresses[web3.utils.keccak256(data)]) ?? false,
+    mutate,
+    ...rest,
+    // },
   };
 };

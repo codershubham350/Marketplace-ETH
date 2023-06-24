@@ -1,4 +1,3 @@
-import React from "react";
 import { NavBar, Footer } from "@components/ui/common";
 import { Web3Provider } from "@components/providers";
 

@@ -1,5 +1,3 @@
-import React from "react";
-
 const lectures = [
   "How to init App",
   "How to get a help",
