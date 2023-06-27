@@ -1,4 +1,4 @@
-const Card = () => {
+const OwnedCourseCard = () => {
   return (
     <>
       <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-3">
@@ -121,4 +121,4 @@ const Card = () => {
   );
 };
 
-export default Card;
+export default OwnedCourseCard;

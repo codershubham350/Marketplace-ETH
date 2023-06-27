@@ -6,7 +6,7 @@ const Footer = () => {
           <div className="mt-5 flex flex-col items-center">
             <div className="py-6">
               <p className="mb-6 text-white text-sm text-primary-2 font-bold">
-                © {new Date().getFullYear()} Eincode
+                © {new Date().getFullYear()} Ethereum Market
               </p>
             </div>
           </div>

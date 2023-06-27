@@ -3,7 +3,7 @@ import Image from "next/legacy/image";
 import Link from "next/link";
 import { useState } from "react";
 
-const Card = ({ course, Footer }) => {
+const Card = ({ course, Footer, disabled }) => {
   const [descriptionLength, setDescriptionLength] = useState(70);
   const [showReadMore, setShowReadMore] = useState(true);
 
@@ -17,7 +17,7 @@ const Card = ({ course, Footer }) => {
         <div className="flex h-full">
           <div className="flex-1 next-image-wrapper">
             <Image
-              className="object-cover"
+              className={`object-cover ${disabled && "filter grayscale"}`}
               src={course?.coverImage}
               alt={course?.title}
               width={"200"}
