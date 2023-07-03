@@ -60,7 +60,7 @@ export default function Marketplace({ courses }) {
       const result = await contract.methods
         .purchaseCourse(hexCourseId, proof)
         .send({ from: account.data, value });
-      console.log("result", result);
+      // console.log("result", result);
     } catch {
       console.error("Purchase course: Operation has failed!");
     }
