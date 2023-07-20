@@ -16,36 +16,42 @@ const NETWORKS = {
 const targetNetwork = NETWORKS[process.env.NEXT_PUBLIC_TARGET_CHAIN_ID];
 
 export const handler = (web3, provider) => () => {
-  const {
-    data,
-    //  error,
-    mutate,
-    ...rest
-  } = useSWR(
+  const { data, mutate, ...rest } = useSWR(
     () => (web3 ? "web3/network" : null),
     async () => {
       const chainId = await web3.eth.getChainId();
+
+      if (!chainId) {
+        throw new Error("Cannot retrieve network. Please refresh the browser.");
+      }
+
       return NETWORKS[chainId];
     }
   );
 
+  // useEffect(() => {
+  //   provider &&
+  //     provider.on("chainChanged", (netId) =>
+  //       mutate(NETWORKS[parseInt(netId, 16)])
+  //     );
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [web3]);
+
   useEffect(() => {
-    provider &&
-      provider.on("chainChanged", (netId) =>
-        mutate(NETWORKS[parseInt(netId, 16)])
-      );
+    const mutator = (chainId) => mutate(NETWORKS[parseInt(chainId, 16)]);
+    provider?.on("chainChanged", mutator);
+
+    return () => {
+      provider?.removeListener("chainChanged", mutator);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [web3]);
+  }, [provider]);
 
   return {
-    // network: {
     data,
-    // hasInitialResponse: !data && !error,
-    //hasInitialResponse: data || error,
     mutate,
     target: targetNetwork,
     isSupported: data === targetNetwork,
     ...rest,
-    // },
   };
 };

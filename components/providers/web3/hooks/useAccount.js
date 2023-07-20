@@ -6,40 +6,37 @@ const adminAddresses = {
 };
 
 export const handler = (web3, provider) => () => {
-  // const [account, setAccount] = useState(null);
   const { data, mutate, ...rest } = useSWR(
     () => (web3 ? "web3/accounts" : null),
     async () => {
       const accounts = await web3.eth.getAccounts();
-      return accounts[0];
+      const account = accounts[0];
+
+      if (!account) {
+        throw new Error(
+          "Cannot retrieve an account. Please refresh the browser."
+        );
+      }
+      return account;
     }
   );
 
-  // useEffect(() => {
-  //   const getAccount = async () => {
-  //     const accounts = await web3.eth.getAccounts();
-  //     setAccount(accounts[0]);
-  //   };
-  //   web3 && getAccount();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [web3]);
-
   useEffect(() => {
-    provider &&
-      provider.on("accountsChanged", (accounts) => mutate(accounts[0]) ?? null);
+    const mutator = (accounts) => mutate(accounts[0]) ?? null;
+    provider?.on("accountsChanged", mutator);
+
+    // console.log(provider);
+
+    return () => {
+      provider?.removeListener("accountsChanged", mutator);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provider]);
 
-  // if (data) {
-  //   console.log(web3.utils.keccak256(data));
-  // }
-
   return {
-    // account: {
     data,
     isAdmin: (data && adminAddresses[web3.utils.keccak256(data)]) ?? false,
     mutate,
     ...rest,
-    // },
   };
 };
