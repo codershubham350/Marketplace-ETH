@@ -1,3 +1,5 @@
+import React from "react";
+
 const KeyPoints = ({ points }) => {
   return (
     <>
@@ -7,7 +9,7 @@ const KeyPoints = ({ points }) => {
             <div className="mt-10">
               <dl className="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
                 {points.map((point, index) => (
-                  <>
+                  <React.Fragment key={point}>
                     <div key={point} className="relative">
                       <dt>
                         <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
@@ -35,7 +37,7 @@ const KeyPoints = ({ points }) => {
                         {point}
                       </dd>
                     </div>
-                  </>
+                  </React.Fragment>
                 ))}
               </dl>
             </div>

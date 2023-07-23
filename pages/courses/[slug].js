@@ -39,7 +39,7 @@ function Course({ course }) {
               upto 24 hours.
               <i className="block font-normal">
                 In case of any questions, please contact
-                <strong>support@ethereummarket.io</strong>
+                <strong> support@ethereummarket.io </strong>
               </i>
             </Message>
           )}
