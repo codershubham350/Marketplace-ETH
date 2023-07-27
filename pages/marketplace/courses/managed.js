@@ -7,6 +7,13 @@ import { useState } from "react";
 import { useWeb3 } from "@components/providers";
 import Message from "@components/ui/common/message";
 
+// Before TX Balance ->  56.640841624979713552
+// GAS 139809 * 1000000008 -> 139809001118472 -> 0.000139809001118472
+// GAS + VALUE SEND = 0.000139809001118472 + 1 -> 1.000139809001118472
+// After TX Balance -> 55.64070182
+// After TX Balance->  55.640701815978595080
+//                     56.640664324978295152 (After Deactivation)
+
 const VerificationInput = ({ onVerify }) => {
   const [email, setEmail] = useState("");
 
@@ -56,14 +63,24 @@ export default function ManagedCourses() {
       : setProofedOwnership({ ...proofedOwnership, [courseHash]: false });
   };
 
-  const activateCourse = async (courseHash) => {
+  const changeCourseState = async (courseHash, method) => {
     try {
-      await contract.methods
-        .activateCourse(courseHash)
-        .send({ from: account?.data });
+      await contract.methods[method](courseHash).send({ from: account?.data });
     } catch (e) {
       console.error(e.message);
     }
+  };
+
+  const activateCourse = async (courseHash) => {
+    changeCourseState(courseHash, "activateCourse");
+  };
+
+  if (!account?.isAdmin) {
+    return null;
+  }
+
+  const deactivateCourse = async (courseHash) => {
+    changeCourseState(courseHash, "deactivateCourse");
   };
 
   if (!account?.isAdmin) {
@@ -103,7 +120,12 @@ export default function ManagedCourses() {
                 >
                   Activate
                 </Button>
-                <Button variant="red">Deactivate</Button>
+                <Button
+                  variant="red"
+                  onClick={() => deactivateCourse(course?.hash)}
+                >
+                  Deactivate
+                </Button>
               </div>
             )}
           </ManagedCourseCard>

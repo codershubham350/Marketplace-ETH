@@ -1,19 +1,25 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useState } from "react";
-import { useWalletInfo } from "@components/hooks/web3";
-import { Button } from "@components/ui/common";
+import {
+  useAccount,
+  useOwnedCourses,
+  useWalletInfo,
+} from "@components/hooks/web3";
+import { Button, Loader } from "@components/ui/common";
 import { CourseCard, CourseList } from "@components/ui/course";
 import { BaseLayout } from "@components/ui/layout";
 import { MarketHeader } from "@components/ui/marketplace";
 import { OrderModal } from "@components/ui/order";
 import { getAllCourses } from "@content/courses/fetcher";
 import { useWeb3 } from "@components/providers";
+import Message from "@components/ui/common/message";
 
 export default function Marketplace({ courses }) {
-  const { web3, contract } = useWeb3();
+  const { web3, contract, requireInstall } = useWeb3();
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const { canPurchaseCourse, account } = useWalletInfo();
+  const { hasConnectedWallet, account, isConnecting } = useWalletInfo();
+  const { ownedCourses } = useOwnedCourses(courses, account.data);
 
   const purchaseCourse = async (order) => {
     const hexCourseId = web3.utils.utf8ToHex(selectedCourse.id);
@@ -72,20 +78,70 @@ export default function Marketplace({ courses }) {
       <CourseList courses={courses}>
         {(course) => (
           <CourseCard
-            disabled={!canPurchaseCourse}
+            disabled={!hasConnectedWallet}
             key={course.id}
             course={course}
-            Footer={() => (
-              <div className="mt-4 ">
+            Footer={() => {
+              if (requireInstall) {
+                return (
+                  <Button disabled={true} variant="lightPurple">
+                    Install
+                  </Button>
+                );
+              }
+
+              if (isConnecting) {
+                return (
+                  <Button disabled={true} variant="lightPurple">
+                    <Loader size="sm" />
+                  </Button>
+                );
+              }
+
+              if (!ownedCourses?.hasInitialResponse) {
+                return (
+                  <div style={{ height: "50px" }}></div>
+                  // <Button disabled={true} variant="lightPurple">
+                  //   Loading...
+                  // </Button>
+                );
+              }
+              const owned = ownedCourses?.lookup[course?.id];
+
+              if (owned) {
+                return (
+                  <>
+                    <Button disabled={true} variant="green">
+                      Owned
+                    </Button>
+                    <div className="mt-1">
+                      {owned?.state === "activated" && (
+                        <Message size="sm">Activated</Message>
+                      )}
+                      {owned?.state === "deactivated" && (
+                        <Message size="sm" type="danger">
+                          Deactivated
+                        </Message>
+                      )}
+                      {owned?.state === "purchased" && (
+                        <Message size="sm" type="warning">
+                          Awaiting for Activation
+                        </Message>
+                      )}
+                    </div>
+                  </>
+                );
+              }
+              return (
                 <Button
-                  disabled={!canPurchaseCourse}
+                  disabled={!hasConnectedWallet}
                   onClick={() => setSelectedCourse(course)}
                   variant="lightPurple"
                 >
                   Purchase
                 </Button>
-              </div>
-            )}
+              );
+            }}
           />
         )}
       </CourseList>

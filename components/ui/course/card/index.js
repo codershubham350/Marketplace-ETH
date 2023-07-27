@@ -25,7 +25,7 @@ const Card = ({ course, Footer, disabled }) => {
               layout="responsive"
             />
           </div>
-          <div className="p-8 pb-4 flex-2" style={{ height: "266px" }}>
+          <div className="p-8 pb-4 flex-2">
             <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
               Case study
             </div>
@@ -50,7 +50,11 @@ const Card = ({ course, Footer, disabled }) => {
                 </span>
               )}
             </p>
-            {Footer && <Footer />}
+            {Footer && (
+              <div className="mt-2">
+                <Footer />
+              </div>
+            )}
           </div>
         </div>
       </div>
