@@ -18,7 +18,7 @@ export const handler = (web3, contract) => (courses, account) => {
         const courseHash = createCourseHash(web3)(course.id, account);
 
         const ownedCourse = await contract.methods
-          .getCoursebyHash(courseHash)
+          .getCourseByHash(courseHash)
           .call();
 
         if (

@@ -9,7 +9,7 @@ export const handler = (web3, contract) => (course, account) => {
       const courseHash = createCourseHash(web3)(course.id, account);
 
       const ownedCourse = await contract.methods
-        .getCoursebyHash(courseHash)
+        .getCourseByHash(courseHash)
         .call();
 
       if (ownedCourse.owner === "0x0000000000000000000000000000000000000000") {

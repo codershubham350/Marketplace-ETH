@@ -11,6 +11,7 @@ const Button = ({
     lightPurple: `text-indigo-700 bg-indigo-100 ${
       hoverable && "hover:bg-indigo-200"
     }`,
+    green: `text-white bg-green-600 ${hoverable && "hover:bg-green-700"}`,
     white: `text-black bg-white `,
   };
   return (
