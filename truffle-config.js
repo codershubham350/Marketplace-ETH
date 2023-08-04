@@ -24,6 +24,22 @@ module.exports = {
     //   confirmations: 2, // number of blocks to wait between deployment
     //   timeoutBlocks: 200, // number of blocks before deployment times out
     // },
+    live: {
+      provider: () =>
+        new HDWalletProvider({
+          mnemonic: {
+            phrase: keys.MNEMONIC,
+          },
+          providerOrUrl: `wss://mainet.infura.io/ws/v3/${keys.INFURA_PROJECT_ID}`,
+          addressIndex: 0,
+        }),
+      network_id: 1,
+      gas: 2500000, // Gas Limit, How much gas we are willing to spent
+      gasPrice: 2000000000, // how much we are willing to spent for unit of gas (2.5 Gwei)
+      networkCheckoutTimeout: 10000,
+      timeoutBlocks: 200, // number of blocks before deployment times out
+      skipDryRun: true,
+    },
     sepolia: {
       provider: () =>
         new HDWalletProvider({
