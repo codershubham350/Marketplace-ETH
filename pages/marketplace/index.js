@@ -154,9 +154,11 @@ export default function Marketplace({ courses }) {
 
                 if (!ownedCourses?.hasInitialResponse) {
                   // return <div style={{ height: "42px" }}></div>;
-                  <Button disabled={true} size="sm" variant="white">
-                    Loading State...
-                  </Button>;
+                  return (
+                    <Button disabled={true} size="sm" variant="white">
+                      {hasConnectedWallet ? " Loading State..." : "Connect"}
+                    </Button>
+                  );
                 }
 
                 const isBusy = busyCourseId === course?.id;
